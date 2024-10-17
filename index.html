@@ -5,30 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        h1 { color: #333; }
+        body { font-family: Arial, sans-serif; }
         .task { margin-bottom: 10px; }
+        .task a { text-decoration: none; color: blue; }
     </style>
 </head>
 <body>
-    <h1>Task List</h1>
-    <div id="task-list"></div>
+    <h1>Task Manager</h1>
+    <div id="tasks"></div>
 
     <script>
-        // Fetch the tasks from the JSON file hosted on GitHub
+        // Fetch the tasks.json file and display the tasks
         fetch('tasks.json')
             .then(response => response.json())
             .then(tasks => {
-                const taskList = document.getElementById('task-list');
+                const tasksContainer = document.getElementById('tasks');
                 tasks.forEach(task => {
                     const taskDiv = document.createElement('div');
-                    taskDiv.className = 'task';
-                    taskDiv.textContent = task.Description || 'Untitled Task';
-                    taskList.appendChild(taskDiv);
+                    taskDiv.classList.add('task');
+                    taskDiv.innerHTML = `<a href="${task.link}" target="_blank">${task.name}</a>`;
+                    tasksContainer.appendChild(taskDiv);
                 });
             })
             .catch(error => {
                 console.error('Error fetching tasks:', error);
+                document.getElementById('tasks').innerText = 'Failed to load tasks.';
             });
     </script>
 </body>
