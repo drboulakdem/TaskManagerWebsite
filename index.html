@@ -17,20 +17,27 @@
     <script>
         // Fetch the tasks.json file and display the tasks
         fetch('tasks.json')
-            .then(response => response.json())
-            .then(tasks => {
-                const tasksContainer = document.getElementById('tasks');
-                tasks.forEach(task => {
-                    const taskDiv = document.createElement('div');
-                    taskDiv.classList.add('task');
-                    taskDiv.innerHTML = `<a href="${task.link}" target="_blank">${task.name}</a>`;
-                    tasksContainer.appendChild(taskDiv);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching tasks:', error);
-                document.getElementById('tasks').innerText = 'Failed to load tasks.';
-            });
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok: ' + response.statusText);
+        }
+        return response.json();
+    })
+    .then(tasks => {
+        const tasksContainer = document.getElementById('tasks');
+        tasks.forEach(task => {
+            const taskDiv = document.createElement('div');
+            taskDiv.classList.add('task');
+            // Use TaskName and TaskLink to display the task information
+            taskDiv.innerHTML = `<a href="${task.TaskLink}" target="_blank">${task.TaskName}</a>`;
+            tasksContainer.appendChild(taskDiv);
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching tasks:', error);
+        document.getElementById('tasks').innerText = 'Failed to load tasks: ' + error.message;
+    });
+
     </script>
 </body>
 </html>
