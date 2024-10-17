@@ -4,40 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Task Manager</title>
-    <style>
-        body { font-family: Arial, sans-serif; }
-        .task { margin-bottom: 10px; }
-        .task a { text-decoration: none; color: blue; }
-    </style>
 </head>
 <body>
     <h1>Task Manager</h1>
-    <div id="tasks"></div>
-
+    <ul id="tasks-list"></ul>
+    
     <script>
-        // Fetch the tasks.json file and display the tasks
-        fetch('tasks.json')
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok: ' + response.statusText);
-        }
-        return response.json();
-    })
-    .then(tasks => {
-        const tasksContainer = document.getElementById('tasks');
-        tasks.forEach(task => {
-            const taskDiv = document.createElement('div');
-            taskDiv.classList.add('task');
-            // Use TaskName and TaskLink to display the task information
-            taskDiv.innerHTML = `<a href="${task.TaskLink}" target="_blank">${task.TaskName}</a>`;
-            tasksContainer.appendChild(taskDiv);
-        });
-    })
-    .catch(error => {
-        console.error('Error fetching tasks:', error);
-        document.getElementById('tasks').innerText = 'Failed to load tasks: ' + error.message;
-    });
+        async function loadTasks() {
+            const response = await fetch('tasks.json');
+            const tasks = await response.json();
+            const tasksList = document.getElementById('tasks-list');
+            tasksList.innerHTML = ''; // Clear the list
 
+            tasks.forEach(task => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${task.taskName} - ${task.taskLink}`;
+                tasksList.appendChild(listItem);
+            });
+        }
+
+        // Load tasks when the page loads
+        window.onload = loadTasks;
     </script>
 </body>
 </html>
